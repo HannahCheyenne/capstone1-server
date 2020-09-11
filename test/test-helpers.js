@@ -256,11 +256,12 @@ function makeMaliciousJournal(user) {
   }
 }
 
-function makeAffirmationsFixtures() {
+function makeAppFixtures() {
   const testUsers = makeUsersArray()
   const testAffirmations = makeAffirmationsArray(testUsers)
   const testComments = makeCommentsArray(testUsers, testAffirmations)
-  return { testUsers, testAffirmations, testComments }
+  const testJournals = makeJournalsArray(testUsers)
+  return { testUsers, testAffirmations, testComments, testJournals }
 }
 
 function cleanTables(db) {
@@ -299,7 +300,7 @@ function seedUsers(db, users) {
     ))
 }
 
-function seedAffirmationsTables(db, users, affirmations, comments=[]) {
+function seedAppTables(db, users, affirmations, comments=[]) {
   // use a transaction to group the queries and auto rollback on any failure
   return db.transaction(async trx => {
     await seedUsers(trx, users)
@@ -349,9 +350,9 @@ module.exports = {
   makeCommentsArray,
   makeAuthHeader,
 
-  makeAffirmationsFixtures,
+  makeAppFixtures,
   cleanTables,
-  seedAffirmationsTables,
+  seedAppTables,
   seedMaliciousAffirmation,
   seedUsers,
 }

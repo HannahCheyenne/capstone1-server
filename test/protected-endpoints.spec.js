@@ -9,9 +9,10 @@ describe.only(`Protected endpoints`, () => {
 
     const {
         testUsers,
-        testArticles,
+        testAffirmations,
         testComments,
-    } = helpers.makeArticlesFixtures()
+        testJournals
+    } = helpers.makeAppFixtures()
 
     before('make knex instance', () => {
         db = knex({
@@ -27,7 +28,7 @@ describe.only(`Protected endpoints`, () => {
 
     afterEach('cleanup', () => helpers.cleanTables(db))
 
-    beforeEach('insert articles', () => 
+    beforeEach('insert affirmations', () => 
         helpers.seedAffirmationsTables(
         db, 
         testUsers,

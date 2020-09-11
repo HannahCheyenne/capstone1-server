@@ -9,7 +9,7 @@ journalsRouter
   .get((req, res, next) => {
     JournalsService.getAllJournals(req.app.get('db'))
       .then(journals => {
-        console.log(journals)
+        // console.log(journals)
         res.json(journals.map(JournalsService.serializeJournal))
       })
       .catch(next)

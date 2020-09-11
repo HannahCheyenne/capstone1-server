@@ -9,6 +9,7 @@ const commentsRouter = require('./comments/comments-router')
 const authRouter = require('./auth/auth-router')
 
 const app = express()
+const morganSetting = process.env.NODE_ENV === 'production' ? 'tiny' : 'common'
 
 app.use(morgan((NODE_ENV === 'production') ? 'tiny' : 'common', {
   skip: () => NODE_ENV === 'test',
@@ -26,7 +27,7 @@ app.use(function errorHandler(error, req, res, next) {
   if (NODE_ENV === 'production') {
     response = { error: 'Server error' }
   } else {
-    console.error(error)
+    // console.error(error)
     response = { error: error.message, object: error }
   }
   res.status(500).json(response)
