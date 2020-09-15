@@ -3,18 +3,17 @@
   "version": "0.0.1",
   "description": "Capstone 1 Server",
   "private": true,
-  "main": "src/server.js",
+  "main": "server.js",
   "scripts": {
     "test": "mocha --require test/setup.js",
     "dev": "nodemon src/server.js",
     "migrate": "postgrator --config postgrator-config.js",
     "migrate:test": "env NODE_ENV=test npm run migrate",
+    "migrate:production": "heroku run npm run migrate",
     "start": "node src/server.js",
     "predeploy": "npm audit",
-    "deploy": "git push heroku master"
-  },
-  "engines": {
-    "node": "10.11.0"
+    "deploy": "git push heroku master",
+    "postdeploy": "npm run migrate:production"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -26,6 +25,7 @@
     "knex": "^0.20.13",
     "morgan": "^1.10.0",
     "pg": "^7.8.0",
+    "postgrator-cli": "^3.2.0",
     "treeize": "^2.1.2",
     "xss": "^1.0.3"
   },
@@ -33,7 +33,6 @@
     "chai": "^4.2.0",
     "mocha": "^7.1.1",
     "nodemon": "^2.0.3",
-    "postgrator-cli": "^3.2.0",
     "supertest": "^3.3.0"
   },
   "license": "MIT"
