@@ -5,7 +5,6 @@ TRUNCATE
   capstone1_comments,
   capstone1_journals,
   capstone1_users,
-  capstone1_resources,
   capstone1_exercises
   RESTART IDENTITY CASCADE;
 
@@ -151,9 +150,6 @@ INSERT INTO capstone1_comments (
     4
   );
 
-
-INSERT INTO capstone1_resources (title, description, url)
-VALUES ();
 
 INSERT INTO capstone1_exercises (title, description, url)
 VALUES ();

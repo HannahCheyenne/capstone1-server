@@ -164,7 +164,6 @@ function makeExpectedAffirmation(users, affirmation, comments=[]) {
 
   return {
     id: affirmation.id,
-    mood: affirmation.mood,
     content: affirmation.content,
     date_created: affirmation.date_created.toISOString(),
     number_of_comments,
@@ -182,7 +181,7 @@ function makeExpectedAffirmation(users, affirmation, comments=[]) {
 
 function makeExpectedJournal(users, journal) {
   const author = users
-    .find(user => user.id === affirmation.author_id)
+    .find(user => user.id === journal.author_id)
 
   return {
     id: journal.id,
@@ -246,13 +245,13 @@ function makeMaliciousJournal(user) {
     author_id: user.id,
     content: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`,
   }
-  const expectedAffirmation = {
-    ...makeExpectedAffirmation([user], maliciousAffirmation),
+  const expectedJournal = {
+    ...makeExpectedJournal([user], maliciousJournal),
     content: `Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.`,
   }
   return {
-    maliciousAffirmation,
-    expectedAffirmation,
+    maliciousJournal,
+    expectedJournal,
   }
 }
 
@@ -268,6 +267,7 @@ function cleanTables(db) {
   return db.transaction(trx =>
     trx.raw(
       `TRUNCATE
+        capstone1_journals,
         capstone1_affirmations,
         capstone1_users,
         capstone1_comments
@@ -275,9 +275,11 @@ function cleanTables(db) {
     )
     .then(() =>
       Promise.all([
+        trx.raw(`ALTER SEQUENCE capstone1_journals_id_seq minvalue 0 START WITH 1`),
         trx.raw(`ALTER SEQUENCE capstone1_affirmations_id_seq minvalue 0 START WITH 1`),
         trx.raw(`ALTER SEQUENCE capstone1_users_id_seq minvalue 0 START WITH 1`),
         trx.raw(`ALTER SEQUENCE capstone1_comments_id_seq minvalue 0 START WITH 1`),
+        trx.raw(`SELECT setval('capstone1_journals_id_seq', 0)`),
         trx.raw(`SELECT setval('capstone1_affirmations_id_seq', 0)`),
         trx.raw(`SELECT setval('capstone1_users_id_seq', 0)`),
         trx.raw(`SELECT setval('capstone1_comments_id_seq', 0)`),
@@ -300,7 +302,7 @@ function seedUsers(db, users) {
     ))
 }
 
-function seedAppTables(db, users, affirmations, comments=[]) {
+function seedAppTables(db, users, affirmations, journals, comments=[]) {
   // use a transaction to group the queries and auto rollback on any failure
   return db.transaction(async trx => {
     await seedUsers(trx, users)
@@ -310,6 +312,14 @@ function seedAppTables(db, users, affirmations, comments=[]) {
       `SELECT setval('capstone1_affirmations_id_seq', ?)`,
       [affirmations[affirmations.length - 1].id],
     )
+
+    await trx.into('capstone1_journals').insert(journals)
+    // update the auto sequence to match the forced id values
+    await trx.raw(
+      `SELECT setval('capstone1_journals_id_seq', ?)`,
+      [journals[journals.length - 1].id],
+    )
+
     // only insert comments if there are some, also update the sequence counter
     if (comments.length) {
       await trx.into('capstone1_comments').insert(comments)
@@ -327,6 +337,15 @@ function seedMaliciousAffirmation(db, user, affirmation) {
       db
         .into('capstone1_affirmations')
         .insert([affirmation])
+    )
+}
+
+function seedMaliciousJournal(db, user, journal) {
+  return seedUsers(db, [user])
+    .then(() =>
+      db
+        .into('capstone1_journals')
+        .insert([journal])
     )
 }
 
@@ -354,5 +373,6 @@ module.exports = {
   cleanTables,
   seedAppTables,
   seedMaliciousAffirmation,
+  seedMaliciousJournal,
   seedUsers,
 }

@@ -7,9 +7,9 @@ const journalsRouter = require('./journals/journals-router')
 const affirmationsRouter = require('./affirmations/affirmations-router')
 const commentsRouter = require('./comments/comments-router')
 const authRouter = require('./auth/auth-router')
+const usersRouter = require('./users/users-router')
 
 const app = express()
-const morganSetting = process.env.NODE_ENV === 'production' ? 'tiny' : 'common'
 
 app.use(morgan((NODE_ENV === 'production') ? 'tiny' : 'common', {
   skip: () => NODE_ENV === 'test',
@@ -21,6 +21,7 @@ app.use('/api/journals', journalsRouter)
 app.use('/api/affirmations', affirmationsRouter)
 app.use('/api/comments', commentsRouter)
 app.use('/api/auth', authRouter)
+app.use('/api/users', usersRouter)
 
 app.use(function errorHandler(error, req, res, next) {
   let response

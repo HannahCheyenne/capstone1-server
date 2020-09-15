@@ -1,5 +1,7 @@
 TRUNCATE
-  thingful_reviews,
-  thingful_things,
-  thingful_users
+  capstone1_affirmations,
+  capstone1_comments,
+  capstone1_journals,
+  capstone1_users,
+  capstone1_exercises
   RESTART IDENTITY CASCADE;

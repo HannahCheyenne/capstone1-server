@@ -79,8 +79,6 @@ const AffirmationsService = {
     const { author } = affirmation
     return {
       id: affirmation.id,
-      style: affirmation.style,
-      title: xss(affirmation.title),
       content: xss(affirmation.content),
       date_created: new Date(affirmation.date_created),
       number_of_comments: Number(affirmation.number_of_comments) || 0,
@@ -100,7 +98,7 @@ const AffirmationsService = {
     return {
       id: comment.id,
       affirmation_id: comment.affirmation_id,
-      text: xss(comment.text),
+      content: xss(comment.content),
       date_created: new Date(comment.date_created),
       user: {
         id: user.id,

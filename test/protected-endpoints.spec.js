@@ -1,8 +1,6 @@
 const knex = require('knex')
 const app = require('../src/app')
 const helpers = require('./test-helpers')
-const supertest = require('supertest')
-const { it } = require('mocha')
 
 describe.only(`Protected endpoints`, () => {
     let db
@@ -29,28 +27,29 @@ describe.only(`Protected endpoints`, () => {
     afterEach('cleanup', () => helpers.cleanTables(db))
 
     beforeEach('insert affirmations', () => 
-        helpers.seedAffirmationsTables(
+        helpers.seedAppTables(
         db, 
         testUsers,
-        testArticles,
-        testComments
+        testAffirmations,
+        testComments,
+        testJournals
     ))
 
     const protectedEndpoints = [
         {
-          name: 'GET /api/articles/:article_id',
-          path: '/api/articles/1',
+          name: 'GET /api/affirmations/:affirmation_id',
+          path: '/api/affirmations/1',
           method: supertest(app).get,
         },
         {
-          name: 'GET /api/articles/:article_id/comments',
-          path: '/api/articles/1/comments',
+          name: 'GET /api/affirmations/:affirmation_id/comments',
+          path: '/api/affirmations/1/comments',
           method: supertest(app).get,
         },
         {
-            name: 'POST /api/comments',
-            path: '/api/comments',
-            method: supertest(app).post,
+          name: 'POST /api/comments',
+          path: '/api/comments',
+          method: supertest(app).post,
         },
     ]
 
