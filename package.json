@@ -2,7 +2,6 @@
   "name": "capstone1-server",
   "version": "0.0.1",
   "description": "Capstone 1 Server",
-  "private": true,
   "main": "server.js",
   "scripts": {
     "test": "mocha --require test/setup.js",
@@ -15,6 +14,9 @@
     "deploy": "git push heroku master",
     "postdeploy": "npm run migrate:production"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -34,6 +36,5 @@
     "mocha": "^7.1.1",
     "nodemon": "^2.0.3",
     "supertest": "^3.3.0"
-  },
-  "license": "MIT"
+  }
 }
