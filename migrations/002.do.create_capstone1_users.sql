@@ -10,5 +10,5 @@ CREATE TABLE capstone1_users (
 
 ALTER TABLE capstone1_journals
   ADD COLUMN
-    author_id INTEGER REFERENCES capstone1_users(id)
+    user_id INTEGER REFERENCES capstone1_users(id)
     ON DELETE SET NULL;

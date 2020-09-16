@@ -26,13 +26,13 @@ describe.only(`Protected endpoints`, () => {
 
     afterEach('cleanup', () => helpers.cleanTables(db))
 
-    beforeEach('insert affirmations', () => 
+    beforeEach('insert stuff', () => 
         helpers.seedAppTables(
         db, 
         testUsers,
         testAffirmations,
-        testComments,
-        testJournals
+        testJournals,
+        testComments
     ))
 
     const protectedEndpoints = [
