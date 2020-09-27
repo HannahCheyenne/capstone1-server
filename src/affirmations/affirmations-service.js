@@ -3,11 +3,11 @@ const xss = require('xss')
 const AffirmationsService = {
   getAllAffirmations(db) {
     return db
-      .from('capstone1_affirmations AS art')
+      .from('capstone1_affirmations AS aff')
       .select(
-        'art.id',
-        'art.date_created',
-        'art.content',
+        'aff.id',
+        'aff.date_created',
+        'aff.content',
         db.raw(
           `count(DISTINCT comm) AS number_of_comments`
         ),
@@ -26,20 +26,20 @@ const AffirmationsService = {
       )
       .leftJoin(
         'capstone1_comments AS comm',
-        'art.id',
+        'aff.id',
         'comm.affirmation_id',
       )
       .leftJoin(
         'capstone1_users AS usr',
-        'art.author_id',
+        'aff.author_id',
         'usr.id',
       )
-      .groupBy('art.id', 'usr.id')
+      .groupBy('aff.id', 'usr.id')
   },
 
   getById(db, id) {
     return AffirmationsService.getAllAffirmations(db)
-      .where('art.id', id)
+      .where('aff.id', id)
       .first()
   },
 
@@ -48,7 +48,7 @@ const AffirmationsService = {
       .from('capstone1_comments AS comm')
       .select(
         'comm.id',
-        'comm.text',
+        'comm.content',
         'comm.date_created',
         db.raw(
           `json_strip_nulls(

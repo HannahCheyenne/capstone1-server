@@ -8,13 +8,13 @@ const helpers = require('./test-helpers')
 describe('Users Endpoints', function() {
   let db
 
-  const { testUsers } = helpers.makeArticlesFixtures()
+  const { testUsers } = helpers.makeAppFixtures()
   const testUser = testUsers[0]
 
   before('make knex instance', () => {
     db = knex({
       client: 'pg',
-      connection: process.env.TEST_DB_URL,
+      connection: process.env.TEST_DATABASE_URL,
     })
     app.set('db', db)
   })
@@ -147,13 +147,13 @@ describe('Users Endpoints', function() {
             expect(res.body.nickname).to.eql('')
             expect(res.body).to.not.have.property('password')
             expect(res.headers.location).to.eql(`/api/users/${res.body.id}`)
-            const expectedDate = new Date().toLocaleString('en', { timeZone: 'UTC' })
+            const expectedDate = new Date().toLocaleString()
             const actualDate = new Date(res.body.date_created).toLocaleString()
             expect(actualDate).to.eql(expectedDate)
           })
           .expect(res =>
             db
-              .from('blogful_users')
+              .from('capstone1_users')
               .select('*')
               .where({ id: res.body.id })
               .first()
@@ -161,7 +161,7 @@ describe('Users Endpoints', function() {
                 expect(row.user_name).to.eql(newUser.user_name)
                 expect(row.full_name).to.eql(newUser.full_name)
                 expect(row.nickname).to.eql(null)
-                const expectedDate = new Date().toLocaleString('en', { timeZone: 'UTC' })
+                const expectedDate = new Date().toLocaleString()
                 const actualDate = new Date(row.date_created).toLocaleString()
                 expect(actualDate).to.eql(expectedDate)
 
