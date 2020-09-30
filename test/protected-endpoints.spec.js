@@ -36,16 +36,16 @@ describe(`Protected endpoints`, () => {
     ))
 
     const protectedEndpoints = [
-        {
-          name: 'GET /api/affirmations/:affirmation_id',
-          path: '/api/affirmations/1',
-          method: supertest(app).get,
-        },
-        {
-          name: 'GET /api/affirmations/:affirmation_id/comments',
-          path: '/api/affirmations/1/comments',
-          method: supertest(app).get,
-        },
+        // { // MADE THESE ENDPOINTS NOT PROTECTED
+        //   name: 'GET /api/affirmations/:affirmation_id',
+        //   path: '/api/affirmations/1',
+        //   method: supertest(app).get,
+        // },
+        // {
+        //   name: 'GET /api/affirmations/:affirmation_id/comments',
+        //   path: '/api/affirmations/1/comments',
+        //   method: supertest(app).get,
+        // },
         {
           name: 'POST /api/comments',
           path: '/api/comments',

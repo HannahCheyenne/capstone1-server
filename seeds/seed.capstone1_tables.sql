@@ -17,7 +17,7 @@ VALUES
   ('lexlor', 'Alex Taylor', 'Lex', '$2a$12$yuXT94Yh1uE2jDYrXcCjAOe4NECCzDcU2NGB0eZbSH37O6.uouKVW'),
   ('wippy', 'Ping Won In', 'Ping', '$2a$12$Qc7fndZNAz707Ww9grE/FusFN2d6H7bS5GXxrrPOPEkG0aR6pVD86');
 
-INSERT INTO capstone1_journals (mood, user_id, content)
+INSERT INTO capstone1_journals (mood, author_id, content)
 VALUES
   ('mood 1', 1, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'),
   ('mood 3', 2, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'),
@@ -30,7 +30,7 @@ VALUES
   ('mood 2', 3, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'),
   ('mood 1', 4, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
 
-INSERT INTO capstone1_affirmations (user_id, content)
+INSERT INTO capstone1_affirmations (author_id, content)
 VALUES
   (1, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'),
   (2, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'),
@@ -47,7 +47,7 @@ VALUES
 INSERT INTO capstone1_comments (
   content,
   affirmation_id,
-  user_id
+  author_id
 ) VALUES
   (
     'This post is amazing',
@@ -151,7 +151,13 @@ INSERT INTO capstone1_comments (
   );
 
 
-INSERT INTO capstone1_exercises (title, description, url)
-VALUES ();
+INSERT INTO capstone1_exercises (title, description, url, style)
+VALUES 
+('Exercise 1', 'this is the description for exercise 1 ....', 'https://www.google.com', 'Breathing'),
+('Exercise 2', 'this is the description for exercise 2 ....', 'https://www.google.com', 'Coping'),
+('Exercise 3', 'this is the description for exercise 3 ....', 'https://www.google.com', 'Grounding'),
+('Exercise 4', 'this is the description for exercise 4 ....', 'https://www.google.com', 'Breathing'),
+('Exercise 5', 'this is the description for exercise 5 ....', 'https://www.google.com', 'Coping'),
+('Exercise 6', 'this is the description for exercise 6 ....', 'https://www.google.com', 'Grounding');
 
 COMMIT;

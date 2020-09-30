@@ -1,6 +1,36 @@
 const xss = require('xss')
 
 const CommentsService = {
+  getAllComments(db) {
+    return db
+      .from('capstone1_comments AS comm')
+      .select(
+        'comm.id',
+        'comm.content',
+        'comm.date_created',
+        db.raw(
+          `json_strip_nulls(
+            row_to_json(
+              (SELECT tmp FROM (
+                SELECT
+                  usr.id,
+                  usr.user_name,
+                  usr.full_name,
+                  usr.nickname,
+                  usr.date_created,
+                  usr.date_modified
+              ) tmp)
+            )
+          ) AS "user"`
+        )
+      )
+      .leftJoin(
+        'capstone1_users AS usr',
+        'comm.author_id',
+        'usr.id',
+      )
+  },
+
   getById(db, id) {
     return db
       .from('capstone1_comments AS comm')
@@ -27,7 +57,7 @@ const CommentsService = {
       )
       .leftJoin(
         'capstone1_users AS usr',
-        'comm.user_id',
+        'comm.author_id',
         'usr.id',
       )
       .where('comm.id', id)
@@ -61,7 +91,9 @@ const CommentsService = {
         date_modified: new Date(user.date_modified) || null
       },
     }
-  }
+  },
+
+  
 }
 
 module.exports = CommentsService

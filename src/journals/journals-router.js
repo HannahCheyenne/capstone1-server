@@ -6,7 +6,7 @@ const journalsRouter = express.Router()
 
 journalsRouter
   .route('/')
-  .get((req, res, next) => {
+  .get(requireAuth, (req, res, next) => {
     JournalsService.getAllJournals(req.app.get('db'))
       .then(journals => {
         // console.log(journals)

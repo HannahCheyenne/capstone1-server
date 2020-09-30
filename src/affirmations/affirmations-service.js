@@ -69,7 +69,7 @@ const AffirmationsService = {
       .where('comm.affirmation_id', affirmation_id)
       .leftJoin(
         'capstone1_users AS usr',
-        'comm.user_id',
+        'comm.author_id',
         'usr.id',
       )
       .groupBy('comm.id', 'usr.id')
@@ -109,6 +109,17 @@ const AffirmationsService = {
         date_modified: new Date(user.date_modified) || null
       },
     }
+  },
+
+  insertAffirmation(db, newAffirmation) {
+    return db
+      .insert(newAffirmation)
+      .into('capstone1_affirmations')
+      .returning('*')
+      .then(([affirmation]) => affirmation)
+      .then(affirmation =>
+        AffirmationsService.getById(db, affirmation.id)
+      )
   },
 }
 

@@ -73,49 +73,49 @@ function makeCommentsArray(users, affirmations) {
       id: 1,
       content: 'First test comment!',
       affirmation_id: affirmations[0].id,
-      user_id: users[0].id,
+      author_id: users[0].id,
       date_created: new Date('2029-01-22T16:28:32.615Z'),
     },
     {
       id: 2,
       content: 'Second test comment!',
       affirmation_id: affirmations[0].id,
-      user_id: users[1].id,
+      author_id: users[1].id,
       date_created: new Date('2029-01-22T16:28:32.615Z'),
     },
     {
       id: 3,
       content: 'Third test comment!',
       affirmation_id: affirmations[0].id,
-      user_id: users[2].id,
+      author_id: users[2].id,
       date_created: new Date('2029-01-22T16:28:32.615Z'),
     },
     {
       id: 4,
       content: 'Fourth test comment!',
       affirmation_id: affirmations[0].id,
-      user_id: users[3].id,
+      author_id: users[3].id,
       date_created: new Date('2029-01-22T16:28:32.615Z'),
     },
     {
       id: 5,
       content: 'Fifth test comment!',
       affirmation_id: affirmations[affirmations.length - 1].id,
-      user_id: users[0].id,
+      author_id: users[0].id,
       date_created: new Date('2029-01-22T16:28:32.615Z'),
     },
     {
       id: 6,
       content: 'Sixth test comment!',
       affirmation_id: affirmations[affirmations.length - 1].id,
-      user_id: users[2].id,
+      author_id: users[2].id,
       date_created: new Date('2029-01-22T16:28:32.615Z'),
     },
     {
       id: 7,
       content: 'Seventh test comment!',
       affirmation_id: affirmations[3].id,
-      user_id: users[0].id,
+      author_id: users[0].id,
       date_created: new Date('2029-01-22T16:28:32.615Z'),
     },
   ];
@@ -204,7 +204,7 @@ function makeExpectedAffirmationComments(users, affirmationId, comments) {
     .filter(comment => comment.affirmation_id === affirmationId)
 
   return expectedComments.map(comment => {
-    const commentUser = users.find(user => user.id === comment.user_id)
+    const commentUser = users.find(user => user.id === comment.author_id)
     return {
       id: comment.id,
       content: comment.content,

@@ -4,6 +4,6 @@ CREATE TABLE capstone1_comments (
     date_created TIMESTAMP DEFAULT now() NOT NULL,
     affirmation_id INTEGER
         REFERENCES capstone1_affirmations(id) ON DELETE CASCADE NOT NULL,
-    user_id INTEGER
+    author_id INTEGER
         REFERENCES capstone1_users(id) ON DELETE CASCADE NOT NULL
 );
