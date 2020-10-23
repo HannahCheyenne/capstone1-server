@@ -1,68 +1,38 @@
 const xss = require('xss')
 
 const CommentsService = {
-  getAllComments(db) {
-    return db
-      .from('capstone1_comments AS comm')
-      .select(
-        'comm.id',
-        'comm.content',
-        'comm.date_created',
-        db.raw(
-          `json_strip_nulls(
-            row_to_json(
-              (SELECT tmp FROM (
-                SELECT
-                  usr.id,
-                  usr.user_name,
-                  usr.full_name,
-                  usr.nickname,
-                  usr.date_created,
-                  usr.date_modified
-              ) tmp)
-            )
-          ) AS "user"`
-        )
-      )
-      .leftJoin(
-        'capstone1_users AS usr',
-        'comm.author_id',
-        'usr.id',
-      )
-  },
-
-  getById(db, id) {
-    return db
-      .from('capstone1_comments AS comm')
-      .select(
-        'comm.id',
-        'comm.content',
-        'comm.date_created',
-        'comm.affirmation_id',
-        db.raw(
-          `json_strip_nulls(
-            row_to_json(
-              (SELECT tmp FROM (
-                SELECT
-                  usr.id,
-                  usr.user_name,
-                  usr.full_name,
-                  usr.nickname,
-                  usr.date_created,
-                  usr.date_modified
-              ) tmp)
-            )
-          ) AS "user"`
-        )
-      )
-      .leftJoin(
-        'capstone1_users AS usr',
-        'comm.author_id',
-        'usr.id',
-      )
-      .where('comm.id', id)
-      .first()
-  },
+  // getById(db, id) {
+  //   return db
+  //     .from('capstone1_comments AS comm')
+  //     .select(
+  //       'comm.id',
+  //       'comm.content',
+  //       'comm.date_created',
+  //       'comm.affirmation_id',
+  //       db.raw(
+  //         `json_strip_nulls(
+  //           row_to_json(
+  //             (SELECT tmp FROM (
+  //               SELECT
+  //                 usr.id,
+  //                 usr.user_name,
+  //                 usr.full_name,
+  //                 usr.nickname,
+  //                 usr.date_created,
+  //                 usr.date_modified
+  //             ) tmp)
+  //           )
+  //         ) AS "user"`
+  //       )
+  //     )
+  //     .leftJoin(
+  //       'capstone1_users AS usr',
+  //       'comm.author_id',
+  //       'usr.id',
+  //     )
+  //     .where('comm.id', id)
+  //     .first()
+  // },
 
   insertComment(db, newComment) {
     return db

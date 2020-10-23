@@ -20,8 +20,8 @@ affirmationsRouter
     const { content, date_created } = req.body
     const newAffirmation = { content }
 
-    for(const [key, value] of Object.entries(newAffirmation)) {
-      if(value === null) {
+    for (const [key, value] of Object.entries(newAffirmation)) {
+      if (value === null) {
         return res.status(400).json({
           error: { message: `Missing '${key}' in request body` }
         })
@@ -38,9 +38,9 @@ affirmationsRouter
       .then(affirmation => {
         console.log(affirmation)
         res
-        .status(201)
-        .location(path.posix.join(req.originalUrl, `/${affirmation.id}`))
-        .json(AffirmationsService.serializeAffirmation(affirmation))
+          .status(201)
+          .location(path.posix.join(req.originalUrl, `/${affirmation.id}`))
+          .json(AffirmationsService.serializeAffirmation(affirmation))
       })
       .catch(next)
 
@@ -51,6 +51,21 @@ affirmationsRouter
   .all(checkAffirmationExists)
   .get((req, res) => {
     res.json(AffirmationsService.serializeAffirmation(res.affirmation))
+  })
+
+
+affirmationsRouter
+  .route('/:affirmation_id/comments/')
+  .all(checkAffirmationExists)
+  .get((req, res, next) => {
+    AffirmationsService.getCommentsForAffirmation(
+      req.app.get('db'),
+      req.params.affirmation_id
+    )
+      .then(comments => {
+        res.json(comments.map(AffirmationsService.serializeAffirmationComment))
+      })
+      .catch(next)
   })
 
 
