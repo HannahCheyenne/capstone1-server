@@ -6,13 +6,53 @@ const journalsRouter = express.Router()
 
 journalsRouter
   .route('/')
-  .get(requireAuth, (req, res, next) => {
-    JournalsService.getAllJournals(req.app.get('db'))
-      .then(journals => {
-        // console.log(journals)
-        res.json(journals.map(JournalsService.serializeJournal))
+  .get(requireAuth, async (req, res, next) => {
+    try {
+      const journals = await JournalsService.getUserJournals(
+        req.app.get('db'),
+        req.user.id,
+      )
+      if (!journals) {
+        return res.status(404).json({
+          error: 'You don\'t have any journals',
+        })
+      }
+
+      res.json(journals.map(JournalsService.serializeJournal))
+
+      next()
+    } catch (error) {
+      next(error)
+    }
+  })
+  .post(requireAuth, jsonBodyParser, (req, res, next) => {
+    const { content, date_created } = req.body
+    const newJournal = { content }
+
+    for (const [key, value] of Object.entries(newJournal)) {
+      if (value === null) {
+        return res.status(400).json({
+          error: { message: `Missing '${key}' in request body` }
+        })
+      }
+    }
+
+    newJournal.date_created = date_created
+    newJournal.author_id = req.user.id;
+
+    JournalsService.insertJournal(
+      req.app.get('db'),
+      newJournal
+    )
+      .then(journal => {
+        console.log(journal)
+        res
+          .status(201)
+          .location(path.posix.join(req.originalUrl, `/${journal.id}`))
+          .json(JournalsService.serializeJournal(journal))
       })
       .catch(next)
+
   })
 
 journalsRouter

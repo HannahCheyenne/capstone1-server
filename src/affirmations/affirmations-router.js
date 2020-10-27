@@ -11,7 +11,6 @@ affirmationsRouter
   .get((req, res, next) => {
     AffirmationsService.getAllAffirmations(req.app.get('db'))
       .then(affirmations => {
-        // console.log(affirmations)
         res.json(affirmations.map(AffirmationsService.serializeAffirmation))
       })
       .catch(next)
