@@ -13,10 +13,11 @@ const JournalsService = {
         'journals.author_id'
       )
       .where('journals.author_id', user_id)
+      .groupBy('journals.id', 'journals.author_id')
   },
 
-  getById(db, id) {
-    return JournalsService.getUserJournals(db)
+  getById(db, id, user_id) {
+    return JournalsService.getUserJournals(db, user_id)
       .where('journals.id', id)
       .first()
   },

@@ -3,6 +3,7 @@ const JournalsService = require('./journals-service')
 const { requireAuth } = require('../middleware/jwt-auth')
 
 const journalsRouter = express.Router()
+const jsonBodyParser = express.json()
 
 journalsRouter
   .route('/')
@@ -68,7 +69,8 @@ async function checkJournalExists(req, res, next) {
   try {
     const journal = await JournalsService.getById(
       req.app.get('db'),
-      req.params.journal_id
+      req.params.journal_id,
+      req.user.id
     )
 
     if (!journal)
