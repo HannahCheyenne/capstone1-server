@@ -1,3 +1,4 @@
+const path = require('path')
 const express = require('express')
 const JournalsService = require('./journals-service')
 const { requireAuth } = require('../middleware/jwt-auth')
@@ -27,8 +28,8 @@ journalsRouter
     }
   })
   .post(requireAuth, jsonBodyParser, (req, res, next) => {
-    const { content, date_created } = req.body
-    const newJournal = { content }
+    const { content, mood, date_created } = req.body
+    const newJournal = { content, mood }
 
     for (const [key, value] of Object.entries(newJournal)) {
       if (value === null) {
@@ -46,7 +47,7 @@ journalsRouter
       newJournal
     )
       .then(journal => {
-        console.log(journal)
+        console.log(journal.id)
         res
           .status(201)
           .location(path.posix.join(req.originalUrl, `/${journal.id}`))

@@ -32,6 +32,17 @@ const JournalsService = {
       author_id: journal.author_id
     }
   },
+  
+  insertJournal(db, newJournal) {
+    return db
+      .insert(newJournal)
+      .into('capstone1_journals')
+      .returning('*')
+      .then(([journal]) => journal)
+      .then(journal =>
+        JournalsService.getById(db, journal.id, journal.author_id)
+      )
+  },
 }
 
 module.exports = JournalsService
