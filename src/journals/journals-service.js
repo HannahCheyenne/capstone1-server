@@ -28,7 +28,7 @@ const JournalsService = {
       mood: xss(journal.mood),
       content: xss(journal.content),
       date_created: new Date(journal.date_created),
-      date_modified: new Date(journal.date_modified) || null,
+      date_modified: null,
       author_id: journal.author_id
     }
   },

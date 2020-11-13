@@ -1,5 +1,18 @@
+const knex = require('knex')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+
+/**
+ * create a knex instance connected to postgres
+ * @returns {knex instance}
+ */
+function makeKnexInstance() {
+  return knex({
+    client: 'pg',
+    connection: process.env.TEST_DATABASE_URL,
+  })
+}
+
 
 function makeUsersArray() {
   return [
@@ -127,34 +140,34 @@ function makeJournalsArray(users) {
       id: 1,
       mood: 'Mood 1',
       author_id: users[0].id,
-      date_created: new Date('2029-01-22T16:28:32.615Z'),
+      date_created: '2029-01-22T16:28:32.615Z',
       content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus consequuntur deserunt commodi, nobis qui inventore corrupti iusto aliquid debitis unde non.Adipisci, pariatur.Molestiae, libero esse hic adipisci autem neque ?',
     },
     {
       id: 2,
       mood: 'Mood 2!',
       author_id: users[1].id,
-      date_created: new Date('2029-01-22T16:28:32.615Z'),
+      date_created: '2029-01-22T16:28:32.615Z',
       content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus consequuntur deserunt commodi, nobis qui inventore corrupti iusto aliquid debitis unde non.Adipisci, pariatur.Molestiae, libero esse hic adipisci autem neque ?',
     },
     {
       id: 3,
       mood: 'Mood 1',
       author_id: users[2].id,
-      date_created: new Date('2029-01-22T16:28:32.615Z'),
+      date_created: '2029-01-22T16:28:32.615Z',
       content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus consequuntur deserunt commodi, nobis qui inventore corrupti iusto aliquid debitis unde non.Adipisci, pariatur.Molestiae, libero esse hic adipisci autem neque ?',
     },
     {
       id: 4,
       mood: 'Mood 1',
       author_id: users[3].id,
-      date_created: new Date('2029-01-22T16:28:32.615Z'),
+      date_created: '2029-01-22T16:28:32.615Z',
       content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus consequuntur deserunt commodi, nobis qui inventore corrupti iusto aliquid debitis unde non.Adipisci, pariatur.Molestiae, libero esse hic adipisci autem neque ?',
     },
   ]
 }
 
-function makeExpectedAffirmation(users, affirmation, comments=[]) {
+function makeExpectedAffirmation(users, affirmation, comments = []) {
   const author = users
     .find(user => user.id === affirmation.author_id)
 
@@ -186,16 +199,10 @@ function makeExpectedJournal(users, journal) {
   return {
     id: journal.id,
     mood: journal.mood,
+    date_created: journal.date_created,
+    date_modified: null,
     content: journal.content,
-    date_created: journal.date_created.toISOString(),
-    author: {
-      id: author.id,
-      user_name: author.user_name,
-      full_name: author.full_name,
-      nickname: author.nickname,
-      date_created: author.date_created.toISOString(),
-      date_modified: author.date_modified || null,
-    },
+    author_id: author.id,
   }
 }
 
@@ -243,6 +250,7 @@ function makeMaliciousJournal(user) {
     id: 911,
     date_created: new Date(),
     author_id: user.id,
+    mood: 'mood 1',
     content: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`,
   }
   const expectedJournal = {
@@ -273,18 +281,18 @@ function cleanTables(db) {
         capstone1_comments
       `
     )
-    .then(() =>
-      Promise.all([
-        trx.raw(`ALTER SEQUENCE capstone1_journals_id_seq minvalue 0 START WITH 1`),
-        trx.raw(`ALTER SEQUENCE capstone1_affirmations_id_seq minvalue 0 START WITH 1`),
-        trx.raw(`ALTER SEQUENCE capstone1_users_id_seq minvalue 0 START WITH 1`),
-        trx.raw(`ALTER SEQUENCE capstone1_comments_id_seq minvalue 0 START WITH 1`),
-        trx.raw(`SELECT setval('capstone1_journals_id_seq', 0)`),
-        trx.raw(`SELECT setval('capstone1_affirmations_id_seq', 0)`),
-        trx.raw(`SELECT setval('capstone1_users_id_seq', 0)`),
-        trx.raw(`SELECT setval('capstone1_comments_id_seq', 0)`),
-      ])
-    )
+      .then(() =>
+        Promise.all([
+          trx.raw(`ALTER SEQUENCE capstone1_journals_id_seq minvalue 0 START WITH 1`),
+          trx.raw(`ALTER SEQUENCE capstone1_affirmations_id_seq minvalue 0 START WITH 1`),
+          trx.raw(`ALTER SEQUENCE capstone1_users_id_seq minvalue 0 START WITH 1`),
+          trx.raw(`ALTER SEQUENCE capstone1_comments_id_seq minvalue 0 START WITH 1`),
+          trx.raw(`SELECT setval('capstone1_journals_id_seq', 0)`),
+          trx.raw(`SELECT setval('capstone1_affirmations_id_seq', 0)`),
+          trx.raw(`SELECT setval('capstone1_users_id_seq', 0)`),
+          trx.raw(`SELECT setval('capstone1_comments_id_seq', 0)`),
+        ])
+      )
   )
 }
 
@@ -299,10 +307,10 @@ function seedUsers(db, users) {
       db.raw(
         `SELECT setval('capstone1_users_id_seq', ?)`,
         [users[users.length - 1].id],
-    ))
+      ))
 }
 
-function seedAppTables(db, users, affirmations, journals, comments=[]) {
+function seedAppTables(db, users, affirmations, journals, comments = []) {
   // use a transaction to group the queries and auto rollback on any failure
   return db.transaction(async trx => {
     await seedUsers(trx, users)
@@ -358,6 +366,7 @@ function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
 }
 
 module.exports = {
+  makeKnexInstance,
   makeUsersArray,
   makeAffirmationsArray,
   makeExpectedAffirmation,

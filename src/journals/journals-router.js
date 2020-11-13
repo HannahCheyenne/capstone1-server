@@ -39,7 +39,8 @@ journalsRouter
       }
     }
 
-    newJournal.date_created = date_created
+    newJournal.date_created = date_created;
+    newJournal.date_modified = null;
     newJournal.author_id = req.user.id;
 
     JournalsService.insertJournal(
