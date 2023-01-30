@@ -52,7 +52,7 @@ A successful GET request returns an array of the user's logged entries. Each log
 the POST method requires a request body that should include:
 
 ## '/comments'
-The scorecards endpoint accepts GET and POST requests. GET returns the requested user's list of saved scorecards. POST adds a new comment to an affirmation post.<br>
+The comments endpoint accepts GET and POST requests. GET returns the requested affirmations list of comments. POST adds a new comment to an affirmation post.<br>
 Both methods require authorization in the request header.
 the request header should include:<br>
 { 'Authorization': 'Bearer AUTH-TOKEN-FROM-LOGIN-RESPONSE }<br>
